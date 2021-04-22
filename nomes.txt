@@ -1,0 +1,2 @@
+5,blablabla,5.15
+52,teste,6.85
