@@ -47,7 +47,7 @@ void nota_fiscal(S_produto *produtos, int qtd)
 void escrever_arq(S_produto *prod, int qtd)
 {
   FILE *arq;
-  if ((arq=fopen ("nomes.txt","w")) != NULL) 
+  if ((arq=fopen ("caixa.txt","w")) != NULL) 
    {
     for (int i = 0; i < qtd; ++i)
     {
@@ -64,7 +64,7 @@ int ler_arq(S_produto *prod)
   int i;
   FILE *arq;
 
-  if ((arq = fopen("nomes.txt","r")) != NULL) 
+  if ((arq = fopen("caixa.txt","r")) != NULL) 
    {
     for(i=0; i < D_QTDD_DE_ITENS && (arq != NULL);)
     {

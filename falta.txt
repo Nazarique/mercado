@@ -1,0 +1,8 @@
+- No sistema, os produtos são passados um após o outro, seguindo uma fila
+- Inserir um produto via arquivo no caixa
+- Inserir um produto manualmente no caixa
+- Processar um produto que está no caixa, colocando-o na nota fiscal 
+e atualizando o valor total da compra. Neste caso
+o produto sai do caixa e entra na nota.
+- Processar todos os produtos do caixa (mesmo processo acima).
+- Imprimir a lista de itens que estão no caixa
