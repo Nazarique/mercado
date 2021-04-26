@@ -178,7 +178,7 @@ void adiconar_ao_caixa(S_pilha *caixa)
 
 int main(void)
 {
-
+  system("color e4");
   S_pilha caixa;
   S_pilha processado; 
 
@@ -193,7 +193,7 @@ int main(void)
       printf("\t\tMENU\n\n");
       printf("\t[ 1 ] - Comprar com arquivo\n\t[ 2 ] - Comprar manualmente\n\t[ 3 ] - Funcionario processando UMA mercadoria\n\t[ 4 ] - Funcionario processando TODAS mercadoria\n\t[ 5 ] - Listas Itens no CAIXA\n\t[ 6 ] - Arquivar caixa\n\t[ 7 ] - Finalizar a comprar e Imprimir Nota Fiscal\n\t[ 0 ] - Sair\n>");
           
-      fflush(stdout);
+      //fflush(stdout);
       scanf("%d", &opcao);
       fflush(stdin);
       system("cls");    
@@ -249,7 +249,12 @@ int main(void)
                   printf("\n\tCAIXA vazio!!!\n");
                   printf("\n\tItens do caixa ja foram processados:\n\n");
               }
-              pilha_imprime(caixa.pilha, caixa.topo+1);
+              else
+              {
+                printf("\n\tItens no caixa ainda nao processados:\n\n");
+                pilha_imprime(caixa.pilha, caixa.topo+1);
+              }
+              
               break;
 
               case 6:
