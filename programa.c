@@ -92,7 +92,7 @@ int contar(char *string)
 void nota_fiscal(S_produto *produtos, int qtd)
 {
   float total = 0;
-  printf("\n\n\n\n\t\tItens comprados\n\tQte\tDescricao\tValor\tfinal");
+  printf("\n\n\n\n\t\tItens comprados\n\tQte\tDescricao\tValor final");
   printf(D_ESTRELA_NOTA_FICAL);
 
   for (int i = 0; i < qtd; ++i)
@@ -242,19 +242,14 @@ int main(void)
               if(processado.topo == -1 && caixa.topo == -1)
               {
                   printf("\n\tCAIXA vazio!!!\n");
-                  printf("\n\tItens do caixa ainda nao foram processados:\n\n");
               }
               else if(caixa.topo == -1)
               {
-                  printf("\n\tCAIXA vazio!!!\n");
                   printf("\n\tItens do caixa ja foram processados:\n\n");
+              
               }
               else
-              {
-                printf("\n\tItens no caixa ainda nao processados:\n\n");
                 pilha_imprime(caixa.pilha, caixa.topo+1);
-              }
-              
               break;
 
               case 6:
