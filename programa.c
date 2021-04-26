@@ -54,8 +54,7 @@ void relatorio(S_pilha caixa, S_pilha processados)
 {
   printf("\n\tItens no caixa ainda nao processados:\n\n");
   pilha_imprime(caixa.pilha, caixa.topo+1);
-  printf("\n");
-  printf("\n\tItens processados:\n\n");
+  printf("\n\n\tItens processados:\n\n");
   pilha_imprime(processados.pilha, processados.topo+1);
   printf("\n\t-----------------------------------------\n");
 }
@@ -64,7 +63,7 @@ void pilha_adiciona(S_produto *pilha, int *topo, S_produto novo_prod)
 {
   
     if (*topo == D_QTDD_DE_ITENS -1 )
-       printf("pilha cheia! ");
+       printf("\n\tpilha cheia! ");
     else
     {
         *topo = *topo + 1;
@@ -76,7 +75,7 @@ S_produto pilha_retira(S_produto *pilha, int *topo)
 {
   S_produto aux;
     if (*topo ==  -1 )
-       printf("pilha Vazia!\n");
+       printf("\n\tpilha Vazia!\n");
     else
     {
         aux = pilha[*topo];
@@ -156,6 +155,49 @@ int arq_ler(S_produto *prod)
    return i;
 }
 
+void adiconar_ao_caixa(S_pilha *caixa)
+{
+  char opcao = '\0';
+  system("cls");
+
+  while(1)
+  {
+    printf("\n\tDeseja adiconar um novo produto?(s/n)");
+    scanf(" %c", &opcao);
+
+    if(opcao=='s' || opcao=='S')
+    {
+
+      printf("\n\tsim\n");
+      S_produto prod_novo;
+      memset(&prod_novo, 0, sizeof(S_produto));
+
+      printf("\n\tNome: ");
+      scanf("%s", prod_novo.nome);
+
+      printf("\n\tQuantidade: ");
+      scanf("%u", &prod_novo.qtd);
+
+      printf("\n\tPreco: ");
+      scanf("%f", &prod_novo.preco);
+
+      pilha_adiciona(caixa->pilha, &caixa->topo, prod_novo);
+    }
+    else if(opcao=='n' || opcao=='N')
+    {
+      printf("\n\tnao");
+      break;
+    }
+    else 
+    {
+      printf("\n\tSelecao invalida\n\tPor favor Selecione uma opcao valida");
+    }
+  }
+  printf("\nPressione enter para sair.");
+  getchar();
+  system("cls");
+}
+
 int main(void)
 {
 
@@ -165,20 +207,17 @@ int main(void)
   pilha_inicializa(&caixa);
   pilha_inicializa(&processado);
 
-  S_produto prod_novo = {"prod novo", 25 , 6.85};
-
-
   relatorio(caixa, processado);
-  
-  pilha_adiciona(caixa.pilha, &caixa.topo, prod_novo);
+  adiconar_ao_caixa(&caixa);
+  //pilha_adiciona(caixa.pilha, &caixa.topo, prod_novo);
   
   relatorio(caixa, processado);
   
-  pilha_adiciona(processado.pilha, &processado.topo, pilha_retira(caixa.pilha, &caixa.topo));
+  // pilha_adiciona(processado.pilha, &processado.topo, pilha_retira(caixa.pilha, &caixa.topo));
   
-  relatorio(caixa, processado);
+  // relatorio(caixa, processado);
 
-  nota_fiscal(processado.pilha, processado.topo+1);
+  // nota_fiscal(processado.pilha, processado.topo+1);
   getchar();
 
  return 0;
