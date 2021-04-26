@@ -2,17 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-
-/*  fwrite(void * buffer, size_ttamanho, size_t cont, FILE * arquivo), 
-  em que buffer contem o que se deseja escrever, tamanho indica
-  o tamanho em bytes de cada elemento do buffer e cont indica 
-  quantos elementos são lidos/escritos.
-*/
-
 #define D_QTDD_DE_ITENS 10
 #define D_TAM_DO_NOME_DO_PRODUTO 15
 #define D_ESTRELA_NOTA_FICAL "\n\t*****************************************\n"
@@ -115,22 +104,27 @@ void nota_fiscal(S_produto *produtos, int qtd)
   printf(D_ESTRELA_NOTA_FICAL);
   printf("\tTotal\t%-15c\t%-.2f\n", ' ',total);
   printf("\n\n\n\n\tObrigado pela compra, volte sempre!!!");
+  getchar();
+  exit(0);
 
 }
 
 void arq_escrever(S_produto *prod, int qtd)
 {
   FILE *arq;
-  if ((arq=fopen ("nomes.txt","w")) != NULL) 
-   {
+  if ((arq=fopen ("caixa.txt","w")) != NULL) 
+  {
     for (int i = 0; i < qtd; ++i)
     {
       fprintf(arq, "%u,"  ,prod[i].qtd);
       fwrite(prod[i].nome, sizeof(char), contar(prod[i].nome), arq);
       fprintf(arq, ",%.2f\n",prod[i].preco);
     }
+    printf("\n\tArquivos escritos com sucesso!!!\n");
     fclose(arq);
-   }
+  }
+  else
+    printf("\n\tERRO!!!\n");
 }
 
 int arq_ler(S_produto *prod)
@@ -138,7 +132,7 @@ int arq_ler(S_produto *prod)
   int i;
   FILE *arq;
 
-  if ((arq = fopen("nomes.txt","r")) != NULL) 
+  if ((arq = fopen("caixa.txt","r")) != NULL) 
    {
     for(i=0; i < D_QTDD_DE_ITENS && (arq != NULL);)
     {
@@ -151,51 +145,35 @@ int arq_ler(S_produto *prod)
       break;
     }
     fclose(arq);
+    if(i > 0) 
+      printf("\n\tArquivos lidos com sucesso!!!\n");
+    else
+      printf("\n\tArquivos NAO existentes!!!\n");  
+    return i;
    }
-   return i;
+   else
+   {
+    printf("\n\tERRO!!!\n");
+    return 0;
+   }
 }
 
 void adiconar_ao_caixa(S_pilha *caixa)
 {
-  char opcao = '\0';
-  system("cls");
+  printf("\n\tInsira os dados do produto:\n");
+  S_produto prod_novo;
+  memset(&prod_novo, 0, sizeof(S_produto));
 
-  while(1)
-  {
-    printf("\n\tDeseja adiconar um novo produto?(s/n)");
-    scanf(" %c", &opcao);
+  printf("\n\tNome do produto (0 ... 15/Caracteres): ");
+  scanf("%s", prod_novo.nome);
 
-    if(opcao=='s' || opcao=='S')
-    {
+  printf("\n\tQuantidade do produto (0 ... 50): ");
+  scanf("%u", &prod_novo.qtd);
 
-      printf("\n\tsim\n");
-      S_produto prod_novo;
-      memset(&prod_novo, 0, sizeof(S_produto));
+  printf("\n\tPreco do produto (0.0 ... 99.00): ");
+  scanf("%f", &prod_novo.preco);
 
-      printf("\n\tNome: ");
-      scanf("%s", prod_novo.nome);
-
-      printf("\n\tQuantidade: ");
-      scanf("%u", &prod_novo.qtd);
-
-      printf("\n\tPreco: ");
-      scanf("%f", &prod_novo.preco);
-
-      pilha_adiciona(caixa->pilha, &caixa->topo, prod_novo);
-    }
-    else if(opcao=='n' || opcao=='N')
-    {
-      printf("\n\tnao");
-      break;
-    }
-    else 
-    {
-      printf("\n\tSelecao invalida\n\tPor favor Selecione uma opcao valida");
-    }
-  }
-  printf("\nPressione enter para sair.");
-  getchar();
-  system("cls");
+  pilha_adiciona(caixa->pilha, &caixa->topo, prod_novo);
 }
 
 int main(void)
@@ -207,18 +185,106 @@ int main(void)
   pilha_inicializa(&caixa);
   pilha_inicializa(&processado);
 
-  relatorio(caixa, processado);
-  adiconar_ao_caixa(&caixa);
-  //pilha_adiciona(caixa.pilha, &caixa.topo, prod_novo);
-  
-  relatorio(caixa, processado);
-  
-  // pilha_adiciona(processado.pilha, &processado.topo, pilha_retira(caixa.pilha, &caixa.topo));
-  
-  // relatorio(caixa, processado);
+  int opcao = 0;
 
-  // nota_fiscal(processado.pilha, processado.topo+1);
-  getchar();
+  do{
+      
+      system("cls");
+      printf("\t\tMENU\n\n");
+      printf("\t[ 1 ] - Comprar com arquivo\n\t[ 2 ] - Comprar manualmente\n\t[ 3 ] - Funcionario processando UMA mercadoria\n\t[ 4 ] - Funcionario processando TODAS mercadoria\n\t[ 5 ] - Listas Itens no CAIXA\n\t[ 6 ] - Arquivar caixa\n\t[ 7 ] - Finalizar a comprar e Imprimir Nota Fiscal\n\t[ 0 ] - Sair\n>");
+          
+      fflush(stdout);
+      scanf("%d", &opcao);
+      fflush(stdin);
+      system("cls");    
+        switch(opcao)
+        {
+            case 1:
+              caixa.topo = arq_ler(caixa.pilha)-1;
+              if(caixa.topo == -1)
+              {
+                printf("\n\tCAIXA vazio!!!\n");
+                pilha_inicializa(&caixa);
+              }
+              else
+              
+                printf("\n\tItens adicionados ao caixa via arquivo!\n");
+              break;
+            case 2:
+              if(caixa.topo >= 9)
+                printf("\n\tVoce atingiu o limite de 10 itens\n\tPor favor finalize a compra, retire itens ou arquive o seu CAIXA!!!\n");
+              else 
+                if(caixa.topo < 9)
+                  adiconar_ao_caixa(&caixa);
+              break;
+
+            case 3:
+              if(caixa.topo == -1)
+                printf("\n\tCAIXA vazio!!!\n");
+              else
+              {
+                pilha_adiciona(processado.pilha, &processado.topo, pilha_retira(caixa.pilha, &caixa.topo));
+                relatorio(caixa, processado);
+              }
+              break;
+            case 4:
+              if(caixa.topo == -1)
+                printf("\n\tCAIXA vazio!!!\n");
+              else
+              {
+                while(caixa.topo != -1)
+                  pilha_adiciona(processado.pilha, &processado.topo, pilha_retira(caixa.pilha, &caixa.topo));
+                relatorio(caixa, processado);
+              }
+              break;
+
+              case 5:
+              if(processado.topo == -1 && caixa.topo == -1)
+              {
+                  printf("\n\tCAIXA vazio!!!\n");
+                  printf("\n\tItens do caixa ainda nao foram processados:\n\n");
+              }
+              else if(caixa.topo == -1)
+              {
+                  printf("\n\tCAIXA vazio!!!\n");
+                  printf("\n\tItens do caixa ja foram processados:\n\n");
+              }
+              pilha_imprime(caixa.pilha, caixa.topo+1);
+              break;
+
+              case 6:
+                if(caixa.topo == -1)
+                  printf("\n\tCAIXA vazio!!!\n");
+                else
+                {
+                  arq_escrever(caixa.pilha, caixa.topo+1);
+                  printf("\n\tCAIXA liberado\n");
+                  pilha_inicializa(&caixa);
+                  pilha_inicializa(&processado);
+                } 
+                break;             
+              case 7:
+                if(processado.topo == -1)
+                  printf("\n\tNENHUM ITEM FOI PROCESSADO!!!\n");
+                else
+                {
+                  nota_fiscal(processado.pilha, processado.topo+1);
+                  pilha_inicializa(&caixa);
+                  pilha_inicializa(&processado);
+                }
+              break;
+            case 0:
+              exit(0);
+              break;
+
+            default:
+              printf("\n\tSelecao invalida\n\tPor favor Selecione uma opcao valida");
+              break;
+        }
+      printf("\n\tPressione enter para sair.\n");
+      getchar();
+    }
+    while(opcao != 0);
 
  return 0;
 }

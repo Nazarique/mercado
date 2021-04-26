@@ -77,8 +77,14 @@ int ler_arq(S_produto *prod)
       break;
     }
     fclose(arq);
+    printf("\n\tArquivos lidos com sucesso!!!\n");
+    return i;
    }
-   return i;
+   else
+   {
+    printf("\n\tArquivos NAO existentes!!!\n");
+    return -1;
+   }
 }
 
 int main()
